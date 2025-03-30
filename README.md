@@ -19,5 +19,11 @@ This is the set of routines that act exactly like the base function call in the 
 > ```
 > where `ierr_` is the result of the netcdf function call.
 
+Level 0 NetCDF routines are organised in the following files:
+- a
+- b
+- c
+
+
 ## Level 1 NetCDF readers-writers
 Here we start adding some fancy checking before the call to make writing or reading an unknown variable a little easier.
