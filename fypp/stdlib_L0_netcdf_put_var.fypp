@@ -1,0 +1,56 @@
+#:include "../../../include/common.fypp"
+#:include "../../../include/stdlib_netcdf.fypp"
+!
+! Level 0 NetCDF wrappers: No checks are performed, except
+!                          the error check on exit
+!
+submodule (stdlib_netcdf) stdlib_L0_netcdf_put_var
+
+    implicit none
+    !
+    ! Generic name: nc_put_var
+    !
+    interface nc_put_var
+       #:for k1, t1, n1 in (netCDF_REAL_KINDS_TYPES)
+       
+       #:for d in range(netCDF_MAXDIMS)
+       module procedure netCDF_put_var_${d}$D_${k1}$
+       #:endfor 
+       #:endfor
+
+    end interface
+
+contains 
+
+   #:for k1, t1, n1 in (netCDF_REAL_KINDS_TYPES)
+   !
+   !   Routine: netCDF_put_var_XD_${k1}$
+   ! Precision: ${k1}$
+   !      Type: ${t1}$
+   ! 
+   #:for d in range(netCDF_MAXDIMS)
+   !    Rank ${d}$: netCDF_put_var_${d}$D_${k1}$
+   !
+   subroutine netCDF_put_var_${d}$D_${k1}$( ncId, varId, values, start, count, stride, map )
+      USE stdlib_kinds, only: ${k1}$
+      USE netcdf, only: nf90_put_var, f90_NoErr
+      !
+      integer,            intent(in   ) :: ncID
+      integer,            intent(in   ) :: varID
+      ${t1}$,           intent(in   ) :: values${netCDF_Ranks[d]}$
+      integer,  optional, intent(in   ) :: start#{if d > 0}#(${d}$)#{endif}#     
+      integer,  optional, intent(in   ) :: count#{if d > 0}#(${d}$)#{endif}#
+      integer,  optional, intent(in   ) :: stride#{if d > 0}#(${d}$)#{endif}#
+      integer,  optional, intent(in   ) :: map#{if d > 0}#(${d}$)#{endif}#
+      !
+      integer :: ierr
+      !
+      ierr = nf90_put_var( ncId, varId, values, start, count, stride, map)
+      if ( errStatus /= f90_NoErr ) ERROR STOP
+      !
+   end subroutine netCDF_put_var_${d}$D_${k1}$
+   !
+   #:endfor
+   #:endfor
+   !
+end submodule stdlib_L0_netcdf_put_var
