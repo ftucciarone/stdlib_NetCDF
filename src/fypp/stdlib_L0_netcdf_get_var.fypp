@@ -1,10 +1,10 @@
-#:include "../../../include/common.fypp"
-#:include "../../../include/stdlib_netcdf.fypp"
+#:include "../include/common.fypp"
+#:include "../include/stdlib_netcdf.fypp"
 !
 ! Level 0 NetCDF wrappers: No checks are performed, except
 !                          the error check on exit
 !
-submodule (stdlib_netcdf) stdlib_L0_netcdf_get_var
+module stdlib_L0_netcdf_get_var
 
     implicit none
     !
@@ -53,4 +53,4 @@ contains
    #:endfor
    #:endfor
    !
-end submodule stdlib_L0_netcdf_get_var
+end module stdlib_L0_netcdf_get_var
