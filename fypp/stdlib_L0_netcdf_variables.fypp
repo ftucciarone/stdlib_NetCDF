@@ -1,0 +1,219 @@
+#:include "../include/common.fypp"
+#:include "../include/stdlib_netcdf.fypp"
+!
+! Level 0 NetCDF wrappers: No checks are performed, except
+!                          the error check on exit
+!
+module stdlib_L0_netcdf_variables
+
+    implicit none
+    !
+    ! Generic name: nc_get_var
+    !
+    interface nc_get_var
+       #:for k1, t1, n1 in (netCDF_REAL_KINDS_TYPES)
+       
+       #:for d in range(netCDF_MAXDIMS)
+       module procedure netCDF_get_var_${d}$D_${k1}$
+       #:endfor 
+       #:endfor
+
+    end interface
+    !
+    ! Generic name: nc_put_var
+    !
+    interface nc_put_var
+       #:for k1, t1, n1 in (netCDF_REAL_KINDS_TYPES)
+       
+       #:for d in range(netCDF_MAXDIMS)
+       module procedure netCDF_put_var_${d}$D_${k1}$
+       #:endfor 
+       #:endfor
+
+    end interface
+    !
+contains 
+   !
+   !   Routine: netCDF_def_var
+   !
+   subroutine netCDF_def_var( ncId, varName, xtype, dimIds, varID, ierr )
+      USE netcdf, only: nf90_def_var, nf90_strerror, nf90_NoErr
+      !
+      integer,                    intent(in   ) :: ncID
+      character(len=*),           intent(inout) :: varName 
+      integer,                    intent(in   ) :: xtype
+      integer,                    intent(in   ) :: dimIds(:) 
+      integer,                    intent(  out) :: varID
+      integer,          optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_def_var( ncId, TRIM(varName), xtype, dimIds, varID )
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_def_var
+   !
+   !   Routine: netCDF_inquire_var
+   !
+   subroutine netCDF_inquire_varID( ncId, varName, varID, ierr )
+      USE netcdf, only: nf90_inq_varID, nf90_strerror, nf90_NoErr
+      !
+      integer,                    intent(in   ) :: ncID
+      character(len=*),           intent(inout) :: varName 
+      integer,                    intent(  out) :: varID
+      integer,          optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_inq_varID( ncId, TRIM(varName), varID )
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_inquire_varID
+   !
+   !   Routine: netCDF_inquire_var
+   !
+   subroutine netCDF_inquire_var( ncId, varID, varName, xtype, nDims, dimsIDs, nAtts, ierr )
+      USE netcdf, only: nf90_inquire_variable, nf90_strerror, nf90_NoErr
+      !
+      integer,                    intent(in   ) :: ncID
+      integer,                    intent(in   ) :: varID
+      character(len=*), optional, intent(  out) :: varName 
+      integer,          optional, intent(  out) :: xtype
+      integer,          optional, intent(  out) :: nDims
+      integer,          optional, intent(  out) :: dimsIDs(:)
+      integer,          optional, intent(  out) :: nAtts
+      integer,          optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_inquire_variable( ncId, varID, varName, xtype, nDims, dimsIDs, nAtts )
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_inquire_var
+   !
+   !   Routine: netCDF_rename_var
+   !
+   subroutine netCDF_rename_var( ncId, varID, varNewName, ierr )
+      USE netcdf, only: nf90_rename_var, nf90_strerror, nf90_NoErr
+      !
+      integer,                    intent(in   ) :: ncID
+      integer,                    intent(in   ) :: varID
+      character(len=*), optional, intent(in   ) :: varNewName 
+      integer,          optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_rename_var( ncId, varID, TRIM(varNewName) )
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_rename_var
+   !
+   #:for k1, t1, n1 in (netCDF_REAL_KINDS_TYPES)
+   #:for d in range(netCDF_MAXDIMS)
+   !
+   !   Routine: netCDF_get_var_XD_${k1}$
+   ! Precision: ${k1}$
+   !      Type: ${t1}$
+   !    Rank ${d}$: netCDF_get_var_${d}$D_${k1}$
+   !
+   subroutine netCDF_get_var_${d}$D_${k1}$( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#, ierr )
+      USE stdlib_kinds, only: ${k1}$
+      USE netcdf, only: nf90_get_var, nf90_strerror, nf90_NoErr
+      !
+      integer,            intent(in   ) :: ncID
+      integer,            intent(in   ) :: varID
+      ${t1}$,           intent(  out) :: values${netCDF_Ranks[d]}$
+#:if d > 0
+      integer,  optional, intent(in   ) :: start(${d}$)
+      integer,  optional, intent(in   ) :: count(${d}$)
+      integer,  optional, intent(in   ) :: stride(${d}$)
+      integer,  optional, intent(in   ) :: map(${d}$)
+#:endif
+      integer,  optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_get_var( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#) !${d}$D_${k1}$
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_get_var_${d}$D_${k1}$
+   !
+   !   Routine: netCDF_put_var_XD_${k1}$
+   ! Precision: ${k1}$
+   !      Type: ${t1}$
+   !    Rank ${d}$: netCDF_put_var_${d}$D_${k1}$
+   !
+   subroutine netCDF_put_var_${d}$D_${k1}$( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#, ierr )
+      USE stdlib_kinds, only: ${k1}$
+      USE netcdf, only: nf90_put_var, nf90_strerror, nf90_NoErr
+      !
+      integer,            intent(in   ) :: ncID
+      integer,            intent(in   ) :: varID
+      ${t1}$,           intent(in   ) :: values${netCDF_Ranks[d]}$
+#:if d > 0
+      integer,  optional, intent(in   ) :: start(${d}$)
+      integer,  optional, intent(in   ) :: count(${d}$)
+      integer,  optional, intent(in   ) :: stride(${d}$)
+      integer,  optional, intent(in   ) :: map(${d}$)
+#:endif
+      integer,  optional, intent(  out) :: ierr
+      !
+      integer :: ierr_
+      !
+      ierr_ = nf90_put_var( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#) !${d}$D_${k1}$
+      !
+      if (ierr_ /= nf90_NoErr) then
+         if ( present(ierr) ) then
+            ierr = ierr_
+            return
+         else
+            error stop TRIM(nf90_strerror(ierr_))
+         end if
+      end if
+      !
+   end subroutine netCDF_put_var_${d}$D_${k1}$   
+   !
+   #:endfor
+   #:endfor
+   !
+end module stdlib_L0_netcdf_variables
