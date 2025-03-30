@@ -24,7 +24,7 @@ Level 0 NetCDF routines are organised in the following files:
 - [stdlib_L0_netcdf_attributes.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_attributes.F90)
 - [stdlib_L0_netcdf_datasets.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_datasets.F90)
 - [stdlib_L0_netcdf_dimensions.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_dimensions.F90)
-- [stdlib_L0_netcdf_variables.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_variables.F90)
+- [stdlib_L0_netcdf_variables.fypp](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_variables.fypp)
 
 
 ## Level 1 NetCDF readers-writers
