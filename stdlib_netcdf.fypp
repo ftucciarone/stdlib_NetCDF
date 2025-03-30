@@ -1,0 +1,36 @@
+#:mute
+
+
+#!  Maximum number of dimension supported
+#:set netCDF_MAXDIMS = 7 + 1
+
+
+#! Real kinds to be considered during templating
+#:set netCDF_REAL_KINDS = ["sp", "dp"]
+#! Real types to be considered during templating
+#:set netCDF_REAL_TYPES = ["real({})".format(k) for k in netCDF_REAL_KINDS]
+
+
+#! Integer kinds to be considered during templating
+#:set netCDF_INT_KINDS = ["int8", "int16", "int32"]
+#! Integer types to be considered during templating
+#:set netCDF_INT_TYPES = ["integer({})".format(k) for k in netCDF_INT_KINDS]
+
+
+#! Collected (kind, type, suffix) tuples for real types
+#:set netCDF_REAL_KINDS_TYPES = list(zip(netCDF_REAL_KINDS, netCDF_REAL_TYPES))
+#! Collected (kind, type) tuples for integer types
+#:set netCDF_INT_KINDS_TYPES = list(zip(netCDF_INT_KINDS, netCDF_INT_TYPES))
+
+
+#! Collected (kind, type) tuples for integer types
+#:set netCDF_KINDS_TYPES = list(zip(netCDF_INT_KINDS+netCDF_REAL_KINDS, netCDF_INT_TYPES+netCDF_REAL_TYPES))
+
+#! All before is good, but
+#! Redefinition to not have ALL THE POSSIBILITIES
+#! 
+#:set netCDF_MAXDIMS = 7+1
+#:set netCDF_Ranks = ["", "(:)", "(:,:)", "(:,:,:)", "(:,:,:,:)", "(:,:,:,:,:)", "(:,:,:,:,:,:)", "(:,:,:,:,:,:,:)", "(:,:,:,:,:,:,:,:)" ]
+
+
+#:endmute
