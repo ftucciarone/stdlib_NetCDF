@@ -20,11 +20,11 @@ This is the set of routines that act exactly like the base function call in the 
 > where `ierr_` is the result of the netcdf function call.
 
 Level 0 NetCDF routines are organised in the following files:
-- fypp/stdlib_L0_netcdf.F90
-- fypp/stdlib_L0_netcdf_attributes.F90
-- fypp/stdlib_L0_netcdf_datasets.F90
-- fypp/stdlib_L0_netcdf_dimensions.F90
-- fypp/stdlib_L0_netcdf_variables.F90
+- [stdlib_L0_netcdf.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf.F90)
+- [stdlib_L0_netcdf_attributes.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_attributes.F90)
+- [stdlib_L0_netcdf_datasets.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_datasets.F90)
+- [stdlib_L0_netcdf_dimensions.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_dimensions.F90)
+- [stdlib_L0_netcdf_variables.F90](https://github.com/ftucciarone/stdlib_NetCDF/blob/main/fypp/stdlib_L0_netcdf_variables.F90)
 
 
 ## Level 1 NetCDF readers-writers
