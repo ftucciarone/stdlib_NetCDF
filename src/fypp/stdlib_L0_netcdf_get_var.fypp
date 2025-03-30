@@ -31,22 +31,24 @@ contains
    #:for d in range(netCDF_MAXDIMS)
    !    Rank ${d}$: netCDF_get_var_${d}$D_${k1}$
    !
-   subroutine netCDF_get_var_${d}$D_${k1}$( ncId, varId, values, start, count, stride, map )
+   subroutine netCDF_get_var_${d}$D_${k1}$( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#)
       USE stdlib_kinds, only: ${k1}$
-      USE netcdf, only: nf90_get_var, f90_NoErr
+      USE netcdf, only: nf90_get_var
       !
       integer,            intent(in   ) :: ncID
       integer,            intent(in   ) :: varID
       ${t1}$,           intent(  out) :: values${netCDF_Ranks[d]}$
-      integer,  optional, intent(in   ) :: start#{if d > 0}#(${d}$)#{endif}#     
-      integer,  optional, intent(in   ) :: count#{if d > 0}#(${d}$)#{endif}#
-      integer,  optional, intent(in   ) :: stride#{if d > 0}#(${d}$)#{endif}#
-      integer,  optional, intent(in   ) :: map#{if d > 0}#(${d}$)#{endif}#
+#:if d > 0
+      integer,  optional, intent(in   ) :: start(${d}$)
+      integer,  optional, intent(in   ) :: count(${d}$)
+      integer,  optional, intent(in   ) :: stride(${d}$)
+      integer,  optional, intent(in   ) :: map(${d}$)
+#:endif
       !
       integer :: ierr
       !
-      ierr = nf90_get_var( ncId, varId, values, start, count, stride, map)
-      if ( ierr /= f90_NoErr ) ERROR STOP
+      ierr = nf90_get_var( ncId, varId, values#{if d > 0}#, start, count, stride, map #{endif}#) !${d}$D_${k1}$
+      if ( ierr /= 0 ) ERROR STOP
       !
    end subroutine netCDF_get_var_${d}$D_${k1}$
    !
