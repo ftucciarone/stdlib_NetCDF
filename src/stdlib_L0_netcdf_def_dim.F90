@@ -20,7 +20,7 @@ contains
       !
       integer :: ierr
       !
-      ierr = nf90_def_dim( ncId, dimName, dimId, dimID )
+      ierr = nf90_def_dim( ncId, TRIM(dimName), dimId, dimID )
       if ( ierr /= 0 ) ERROR STOP
       !
    end subroutine netCDF_def_dim
