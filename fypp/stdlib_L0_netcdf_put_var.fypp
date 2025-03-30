@@ -46,7 +46,7 @@ contains
       integer :: ierr
       !
       ierr = nf90_put_var( ncId, varId, values, start, count, stride, map)
-      if ( errStatus /= f90_NoErr ) ERROR STOP
+      if ( ierr /= f90_NoErr ) ERROR STOP
       !
    end subroutine netCDF_put_var_${d}$D_${k1}$
    !
